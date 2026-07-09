@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GreenStep Official</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind 다크모드 클래스 인식 설정 적용
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    body {
+      font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* 테마 전환 시 부드러운 애니메이션 적용 */
+    * {
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    button,
+    a,
+    label,
+    input,
+    select,
+    [onclick] {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .custom-scroll {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: transform, opacity;
+      transform: translate3d(0, 0, 0);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ========================================================
+       🌱 물주기 및 물 붓는 시각 애니메이션 CSS
+       ======================================================== */
+    .pour-effect {
+      animation: pourAction 1.4s ease-in-out forwards;
+    }
+
+    @keyframes pourAction {
+      0% {
+        transform: translate(20px, -20px) rotate(0deg);
+        opacity: 0;
+      }
+
+      15% {
+        transform: translate(0, 0) rotate(-40deg);
+        opacity: 1;
+      }
+
+      80% {
+        transform: translate(0, 0) rotate(-40deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(20px, -20px) rotate(0deg);
+        opacity: 0;
+      }
+    }
+
+    .drop-stream-effect {
+      animation: dropStreamAction 0.6s linear infinite;
+    }
+
+    @keyframes dropStreamAction {
+      0% {
+        transform: translateY(-8px) translateX(6px) scale(0.4);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(16px) translateX(-12px) scale(0.9);
+        opacity: 0;
+      }
+    }
+
+    .plant-happy-effect {
+      animation: plantHappyAction 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes plantHappyAction {
+
+      0%,
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+
+      50% {
+        transform: scale(1.3) rotate(6deg);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 antialiased overflow-x-hidden"
+  style="padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);">
+
+  <header
+    class="sticky top-0 z-50 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-100 dark:border-slate-900 px-6 pb-4 flex justify-between items-end shadow-xs"
+    style="padding-top: calc(env(safe-area-inset-top, 0px) + 28px); min-height: calc(env(safe-area-inset-top, 0px) + 76px);">
+    <div class="space-y-1">
+      <span
+        class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/40 px-2.5 py-0.5 rounded-full uppercase tracking-widest inline-block">
+        Green Step Eco System
+      </span>
+      <h1 id="display-school" class="text-xl font-black text-slate-900 dark:text-white tracking-tight">학교 정보 미등록</h1>
+    </div>
+    <div class="flex items-center space-x-2 mb-0.5">
+      <span id="online-status-badge"
+        class="px-2.5 h-7 flex items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-[11px] font-bold shadow-xs whitespace-nowrap">
+        ● 온라인
+      </span>
+      <button onclick="openProfileModal()"
+        class="px-4 h-11 rounded-2xl bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-800 active:scale-95 shadow-xs text-xs font-bold text-slate-600 dark:text-slate-300">
+        설정
+      </button>
+    </div>
+  </header>
+
+  <main class="p-5 space-y-6 max-w-md mx-auto">
+    <section
+      class="bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 rounded-[32px] p-6 text-white shadow-xl relative overflow-hidden fade-in">
+      <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="flex justify-between items-center relative z-10">
+        <p class="text-emerald-100 text-xs font-semibold tracking-wide bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm"
+          id="display-user-info">
+          우측 상단 설정 버튼을 눌러 등록하세요
+        </p>
+        <div
+          class="flex items-center space-x-1.5 bg-slate-900/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+          <span id="display-level" class="text-xs font-black tracking-wider">LV.0 씨앗🫘</span>
+        </div>
+      </div>
+
+      <div class="my-6 relative z-10">
+        <div class="flex justify-between items-baseline">
+          <h3 class="text-xs text-emerald-100/80 font-medium tracking-wide">오늘 실시간 걸은 수 <span id="sync-pending-tag"
+              class="text-[10px] text-amber-300 font-bold hidden">(서버 전송 대기중)</span></h3>
+          <span id="display-total-steps"
+            class="text-[11px] bg-white/10 px-2 py-0.5 rounded-md font-bold text-emerald-100">총 누적: 0보</span>
+        </div>
+        <div class="flex items-baseline space-x-2 mt-1">
+          <span id="step-counter" class="text-5xl font-black tracking-tighter">0</span>
+          <span class="text-lg font-bold opacity-80">걸음</span>
+        </div>
+      </div>
+
+      <div class="space-y-2 relative z-10">
+        <div class="w-full bg-white/20 rounded-full h-3 overflow-hidden p-0.5 border border-white/5">
+          <div id="step-progress" class="bg-white h-full rounded-full transition-all duration-500 shadow-xs"
+            style="width: 0%"></div>
+        </div>
+        <div class="flex justify-between text-[11px] font-bold text-emerald-50/90">
+          <span id="level-target-text">다음 레벨업까지 +2,000보 남음</span>
+          <span id="commute-badge"
+            class="font-bold bg-amber-400 text-slate-900 px-2.5 py-0.5 rounded-lg shadow-xs text-xs">
+            등교 미인증
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-900 rounded-[24px] p-5 border border-slate-100 dark:border-slate-800 shadow-xs space-y-4 fade-in relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-2.5 h-5 bg-teal-500 rounded-md"></div>
+          <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">오늘의 반려식물 물주기 이벤트</h2>
+        </div>
+        <span id="water-status-tag"
+          class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">하루
+          한 번 참여 가능</span>
+      </div>
+
+      <div
+        class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-100/80 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div
+            class="relative w-20 h-20 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-100 dark:border-slate-700 shadow-inner text-4xl overflow-hidden select-none">
+            <span id="plant-emoji" class="relative z-10 block transition-transform duration-200">🌱</span>
+            <span id="watering-can"
+              class="absolute top-1.5 right-1.5 text-2xl opacity-0 pointer-events-none z-20 transition-all">🫖</span>
+            <span class="water-particle absolute top-6 right-8 text-[11px] opacity-0 pointer-events-none z-10">💧</span>
+            <span class="water-particle absolute top-5 right-7 text-[9px] opacity-0 pointer-events-none z-10"
+              style="animation-delay: 0.15s;">💧</span>
+            <span class="water-particle absolute top-7 right-9 text-[10px] opacity-0 pointer-events-none z-10"
+              style="animation-delay: 0.3s;">💧</span>
+          </div>
+          <div>
+            <h4 class="text-xs font-black text-slate-800 dark:text-slate-200" id="plant-status-title">식물이 목이 말라요!</h4>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">물을 주면 랜덤 보너스 걸음수 획득</p>
+          </div>
+        </div>
+        <button onclick="giveWaterToPlant()" id="btn-water-action"
+          class="bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-black text-xs px-4 h-11 rounded-xl shadow-md shadow-emerald-500/10 active:scale-95 transition-all whitespace-nowrap">
+          💧 물 주기
+        </button>
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-900 rounded-[24px] p-5 border border-slate-100 dark:border-slate-800 shadow-xs space-y-3 fade-in">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-2.5 h-5 bg-amber-500 rounded-md"></div>
+          <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">실시간 등교길 기상 레이더</h2>
+        </div>
+        <span id="weather-status-text"
+          class="text-[11px] font-extrabold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-md">조회
+          대기</span>
+      </div>
+
+      <div
+        class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-100/80 dark:border-slate-800 flex items-center justify-between gap-3">
+        <div
+          class="text-center min-w-[70px] border-r border-slate-200 dark:border-slate-700 pr-2 flex flex-col justify-center">
+          <span class="text-[9px] font-black text-slate-400 dark:text-slate-500 block mb-0.5">현재 온도</span>
+          <div class="flex items-baseline justify-center">
+            <span id="weather-temp"
+              class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">--</span>
+            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 ml-0.5">°C</span>
+          </div>
+        </div>
+        <div
+          class="text-center min-w-[75px] border-r border-slate-200 dark:border-slate-700 pr-2 flex flex-col justify-center">
+          <span class="text-[9px] font-black text-blue-400 dark:text-blue-500 block mb-0.5">시간당 강수</span>
+          <div class="flex items-baseline justify-center text-blue-600 dark:text-blue-400">
+            <span id="weather-rain" class="text-2xl font-black tracking-tighter">--</span>
+            <span class="text-[11px] font-bold ml-0.5">mm</span>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0 pl-1">
+          <p id="weather-comment"
+            class="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed break-keep">위치 동기화 중...</p>
+        </div>
+      </div>
+
+      <div id="geo-log" class="text-[11px] font-semibold text-slate-400 dark:text-slate-500 px-1">
+        학교 위치 동기화 대기 중... (200m 이내 진입 시 자동 인증)
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-900 rounded-[24px] p-6 border border-slate-100 dark:border-slate-800 shadow-xs space-y-4 fade-in">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-2.5 h-5 bg-emerald-500 rounded-md"></div>
+          <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">오늘의 영양 웰빙 급식</h2>
+        </div>
+        <div id="meal-calories" class="text-[11px] font-bold">
+          <span
+            class="bg-slate-50 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-full">0
+            kcal</span>
+        </div>
+      </div>
+      <div id="meal-container"
+        class="bg-slate-50/60 dark:bg-slate-800/30 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/80 text-center">
+        <p class="text-slate-400 dark:text-slate-500 text-xs py-4">사용자 등록 시 나이스 정보와 자동 연동됩니다.</p>
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-900 rounded-[24px] p-6 border border-slate-100 dark:border-slate-800 shadow-xs space-y-4 fade-in">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-2.5 h-5 bg-teal-500 rounded-md"></div>
+          <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">우리 학교 실시간 응원 한마디</h2>
+        </div>
+        <span
+          class="text-[10px] bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-md">전교생
+          소통</span>
+      </div>
+
+      <div id="cheers-container"
+        class="space-y-2 max-h-56 overflow-y-auto custom-scroll border-b border-slate-100 dark:border-slate-800 pb-2">
+        <p class="text-slate-400 text-xs text-center py-6">학교 친구들과 응원 한마디를 나누어 보세요!</p>
+      </div>
+
+      <div class="flex space-x-2 pt-1">
+        <input type="text" id="input-cheer-content" maxlength="50"
+          class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all"
+          placeholder="전교생에게 보이는 응원 메시지 입력!">
+        <button onclick="submitCheerMessage()"
+          class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 rounded-xl text-xs active:scale-95 transition-all shadow-xs">
+          등록
+        </button>
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-900 rounded-[24px] p-6 border border-slate-100 dark:border-slate-800 shadow-xs space-y-4 fade-in">
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-2.5 h-5 bg-indigo-500 rounded-md"></div>
+            <div>
+              <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">실시간 걸음 순위 경쟁</h2>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">※ 총 누적 걸음수로 표시됩니다.</p>
+            </div>
+          </div>
+          <span id="my-rank-badge"
+            class="text-[11px] bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 font-extrabold px-2.5 py-1 rounded-lg border border-indigo-100/50 dark:border-indigo-900/40">
+            조회 중...
+          </span>
+        </div>
+        <div
+          class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400">
+          <button onclick="switchRankTab('school')" id="rank-tab-school"
+            class="flex-1 py-2 text-center rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs">전체
+            인원</button>
+          <button onclick="switchRankTab('grade')" id="rank-tab-grade"
+            class="flex-1 py-2 text-center rounded-lg">학년별</button>
+          <button onclick="switchRankTab('class')" id="rank-tab-class"
+            class="flex-1 py-2 text-center rounded-lg">우리반</button>
+        </div>
+      </div>
+      <div id="ranking-list" class="space-y-2 max-h-80 overflow-y-auto custom-scroll">
+        <p class="text-slate-400 text-xs text-center py-6">프로필 저장 완료 시 실시간 참여가 시작됩니다.</p>
+      </div>
+    </section>
+
+    <section
+      class="bg-white dark:bg-slate-900 rounded-[24px] p-6 border border-slate-100 dark:border-slate-800 shadow-xs space-y-4 fade-in">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-2.5 h-5 bg-rose-500 rounded-md"></div>
+          <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">건의 및 제보</h2>
+        </div>
+        <span
+          class="text-[10px] bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 font-bold px-2 py-0.5 rounded-md">의견
+          접수</span>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="block text-xs font-bold text-slate-600 dark:text-slate-400">제보 주제 선택 (클릭)</label>
+        <div class="grid grid-cols-2 gap-2" id="feedback-topic-buttons">
+          <button type="button" onclick="selectFeedbackTopic('🐛 버그/오류 제보', 'rose', 'BUG')" id="btn-topic-0"
+            class="py-2.5 px-3 rounded-xl text-xs font-bold border transition-all text-left bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300 dark:border-rose-900 shadow-xs">
+            🐛 버그/오류 제보
+          </button>
+          <button type="button" onclick="selectFeedbackTopic('💡 기능 추가 제보', 'amber', 'SUGGESTION')" id="btn-topic-1"
+            class="py-2.5 px-3 rounded-xl text-xs font-bold border transition-all text-left bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700">
+            💡 기능 추가 제보
+          </button>
+          <button type="button" onclick="selectFeedbackTopic('🏃 걸음수/인증 문의', 'emerald', 'QUESTION')" id="btn-topic-2"
+            class="py-2.5 px-3 rounded-xl text-xs font-bold border transition-all text-left bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700">
+            🏃 걸음수/인증 문의
+          </button>
+          <button type="button" onclick="selectFeedbackTopic('💬 기타 건의사항', 'indigo', 'OTHER')" id="btn-topic-3"
+            class="py-2.5 px-3 rounded-xl text-xs font-bold border transition-all text-left bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700">
+            💬 기타 건의사항
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-2 pt-1">
+        <textarea id="input-feedback-content" rows="3" maxlength="200"
+          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-medium focus:outline-none focus:border-rose-500 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all custom-scroll"
+          placeholder="상세 내용을 적어주세요. 선택하신 주제로 관리자에게 즉시 전달됩니다. (최대 200자)"></textarea>
+        <button onclick="submitFeedback()"
+          class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold px-4 py-3.5 rounded-xl text-xs active:scale-95 transition-all shadow-xs">
+          💡 선택한 주제로 개발 팀에 의견 보내기
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <div id="profile-modal"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-end justify-center transition-all duration-300">
+    <div
+      class="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-[32px] p-6 space-y-5 shadow-2xl transition-transform duration-300 transform translate-y-full"
+      id="profile-sheet">
+      <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div>
+          <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">그린스텝 환경 설정</h3>
+          <p class="text-[11px] text-rose-500 font-bold mt-0.5">🔒 소속과 성명을 정확히 기록해 주세요.</p>
+        </div>
+        <button onclick="closeProfileModal()"
+          class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">닫기</button>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <div>
+          <label class="block font-black text-slate-700 dark:text-slate-300 mb-1.5">화면 테마 모드</label>
+          <div
+            class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400">
+            <button onclick="changeAppTheme('light')" id="theme-btn-light"
+              class="flex-1 py-2 text-center rounded-lg transition-all">☀️ 라이트</button>
+            <button onclick="changeAppTheme('dark')" id="theme-btn-dark"
+              class="flex-1 py-2 text-center rounded-lg transition-all">🌙 다크모드</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">사용자 본명</label>
+          <input type="text" id="input-username"
+            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+            placeholder="성명을 정확히 입력하세요">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">학교 소속 통합 검색</label>
+          <div class="flex space-x-2">
+            <input type="text" id="input-school-search"
+              class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+              placeholder="학교 이름만 입력 (예: 서울고)">
+            <button onclick="searchSchool()"
+              class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-5 rounded-xl text-xs active:scale-95 transition-all">검색</button>
+          </div>
+          <div id="school-search-results"
+            class="mt-2 bg-slate-50 dark:bg-slate-800 max-h-32 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-700 text-xs divide-y divide-slate-100 dark:divide-slate-700 hidden custom-scroll shadow-inner">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">학년</label>
+            <select id="input-grade"
+              class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 font-medium focus:outline-none"
+              onchange="loadClassList()"></select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">학반</label>
+            <select id="input-class"
+              class="w-full bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 font-medium focus:outline-none"></select>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="goToTermsStep()"
+        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20 tracking-wider mt-2">
+        프로필 등록하기
+      </button>
+    </div>
+  </div>
+
+  <div id="terms-modal"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-end justify-center transition-all duration-300">
+    <div
+      class="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-[32px] p-6 space-y-5 shadow-2xl transition-transform duration-300 transform translate-y-full"
+      id="terms-sheet">
+      <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div>
+          <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">서비스 이용약관 동의</h3>
+          <p class="text-[12px] text-rose-500 font-extrabold mt-0.5">🚨 서비스 이용을 위해 이 약관에 꼭 동의하셔야 합니다.</p>
+        </div>
+        <button onclick="closeTermsModal()"
+          class="text-slate-400 hover:text-slate-600 text-sm font-bold p-1">이전</button>
+      </div>
+
+      <div
+        class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs text-slate-600 dark:text-slate-400">
+        <p class="font-bold text-slate-800 dark:text-slate-200 flex items-center text-[13px]">📢 이용약관</p>
+        <p class="leading-relaxed">정보통신망법 제22조의2 규정에 따라, 그린스텝 서비스 제공을 위해 아래의 스마트폰 기기 권한을 필수로 요청합니다.</p>
+        <div
+          class="space-y-1 bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700 font-semibold">
+          <p class="text-emerald-600 dark:text-emerald-400">🏃 신체 활동 (필수): 실시간 걸음수 측정 및 레벨업 시스템 연동</p>
+          <p class="text-indigo-600 dark:text-indigo-400">📍 위치 정보 (필수): 학교 반경 200m 이내 자동 등교 인증 처리</p>
+        </div>
+      </div>
+
+      <label class="flex items-center space-x-2 mt-3 mb-1 cursor-pointer">
+        <input type="checkbox" id="agree-terms" class="w-4 h-4 accent-emerald-500 rounded border-slate-300">
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">위 이용약관 및 필수 권한 사용에 동의합니다.</span>
+      </label>
+
+      <button onclick="saveProfile()"
+        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 rounded-xl text-sm transition-all shadow-lg">
+        동의하고 등록 완료하기
+      </button>
+    </div>
+  </div>
+
+  <div id="system-popup-modal"
+    class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center transition-all duration-300 opacity-0 p-6">
+    <div
+      class="bg-white dark:bg-slate-900 w-full max-w-[320px] rounded-[32px] p-7 shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col items-center text-center relative overflow-hidden"
+      id="system-popup-card">
+      <div
+        class="w-14 h-14 bg-emerald-50 dark:bg-emerald-950 text-emerald-500 rounded-full flex items-center justify-center mb-4 border border-emerald-100 dark:border-emerald-900">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+          </path>
+        </svg>
+      </div>
+      <div class="z-10 w-full mb-6 space-y-2">
+        <h3 id="popup-title" class="text-lg font-black text-slate-900 dark:text-white tracking-tight break-keep">알림 제목
+        </h3>
+        <p id="popup-content"
+          class="text-[13px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed break-keep">내용</p>
+      </div>
+      <button onclick="closeSystemPopup()"
+        class="z-10 w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3.5 rounded-xl text-sm shadow-lg tracking-wide">
+        확인
+      </button>
+    </div>
+  </div>
+
+  <div id="levelup-modal"
+    class="fixed inset-0 z-[110] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center transition-all duration-300 opacity-0 p-6">
+    <div
+      class="bg-white dark:bg-slate-900 w-full max-w-[320px] rounded-[32px] p-7 shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col items-center text-center relative overflow-hidden"
+      id="levelup-card">
+      <div
+        class="w-16 h-16 bg-emerald-50 dark:bg-emerald-950 text-emerald-500 rounded-full flex items-center justify-center mb-4 border border-emerald-100 dark:border-emerald-900 text-3xl animate-bounce">
+        🎉
+      </div>
+      <div class="z-10 w-full mb-5 space-y-1">
+        <h3 class="text-xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">LEVEL UP!</h3>
+        <p class="text-[12px] font-medium text-slate-500 dark:text-slate-400">축하합니다! 새로운 등급에 도달했습니다.</p>
+      </div>
+      <div
+        class="z-10 my-2 inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 px-5 py-2.5 rounded-2xl font-black text-lg">
+        <span>LV.</span>
+        <span id="levelup-level-value" class="text-xl font-black">0</span>
+        <span id="levelup-level-name" class="text-sm font-bold text-slate-600 dark:text-slate-300 ml-1"></span>
+      </div>
+      <p class="z-10 text-[11px] text-slate-400 dark:text-slate-500 leading-relaxed mb-6 mt-4 graves">더 건강한 지구와 나를
+        위해<br>그린스텝과 함께 계속 걸어볼까요? 🏃✨</p>
+      <button onclick="closeLevelUpModal()"
+        class="z-10 w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl text-sm shadow-lg">
+        확인 및 닫기
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const SERVER_URL = 'https://lsrhjru.hidenfree.com';
+
+    let state = {
+      device_id: '', username: '', school_name: '', schul_code: '', atpt_code: '', school_kind: '',
+      grade: '1', class_num: '1', steps_today: 0, steps_total: 0, is_commuted: false, level: 0,
+      school_lat: 37.5665, school_lng: 126.9780, pending_sync: false,
+      last_watered_date: '', app_theme: 'light'
+    };
+
+    let currentRankTab = 'school';
+    let selectedFeedbackTopic = '🐛 버그/오류 제보';
+    let selectedFeedbackType = 'BUG';
+    let isStreamConnected = false;
+    let evtSource = null;
+    let cachedRankData = { school: [], grade: [], class: [] };
+
+    function calculateLevelInfo(totalSteps) {
+      let level = 0; let requiredForNext = 2000; let cumulativeTarget = 2000;
+      while (totalSteps >= cumulativeTarget) {
+        level++; requiredForNext = 2000 * (level + 1); cumulativeTarget += requiredForNext;
+      }
+      const prevCumulative = cumulativeTarget - requiredForNext;
+      const currentLevelSteps = totalSteps - prevCumulative;
+      const progressPercent = Math.min(100, Math.floor((currentLevelSteps / requiredForNext) * 100));
+      return { level, requiredForNext, currentLevelSteps, progressPercent, cumulativeTarget };
+    }
+
+    function getLevelStageText(level) {
+      if (level >= 30) return `LV.${level} 황금나무🌲`;
+      if (level >= 20) return `LV.${level} 꽃피움🌸`;
+      if (level >= 10) return `LV.${level} 나무🌳`;
+      if (level >= 1) return `LV.${level} 새싹🌱`;
+      return `LV.0 씨앗🫘`;
+    }
+
+    function changeAppTheme(mode) {
+      state.app_theme = mode;
+      localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state));
+
+      const htmlEl = document.documentElement;
+      const lightBtn = document.getElementById('theme-btn-light');
+      const darkBtn = document.getElementById('theme-btn-dark');
+
+      if (mode === 'dark') {
+        htmlEl.classList.add('dark');
+        darkBtn.className = "flex-1 py-2 text-center rounded-lg bg-slate-900 text-white shadow-xs font-black";
+        lightBtn.className = "flex-1 py-2 text-center rounded-lg text-slate-400";
+      } else {
+        htmlEl.classList.remove('dark');
+        lightBtn.className = "flex-1 py-2 text-center rounded-lg bg-white text-slate-900 shadow-xs font-black";
+        darkBtn.className = "flex-1 py-2 text-center rounded-lg text-slate-500";
+      }
+    }
+
+    function giveWaterToPlant() {
+      const todayKst = getKstDateString();
+      if (state.last_watered_date === todayKst) {
+        alert("오늘의 물주기는 이미 완료되었습니다! 내일 다시 식물을 보살펴주세요. 🌳");
+        return;
+      }
+
+      const btnAction = document.getElementById('btn-water-action');
+      btnAction.disabled = true;
+
+      const canEl = document.getElementById('watering-can');
+      const particleEls = document.querySelectorAll('.water-particle');
+      const plantEl = document.getElementById('plant-emoji');
+
+      canEl.classList.add('pour-effect');
+      particleEls.forEach(p => p.classList.add('drop-stream-effect'));
+
+      setTimeout(() => {
+        plantEl.classList.add('plant-happy-effect');
+      }, 350);
+
+      setTimeout(() => {
+        canEl.classList.remove('pour-effect');
+        particleEls.forEach(p => p.classList.remove('drop-stream-effect'));
+        plantEl.classList.remove('plant-happy-effect');
+        btnAction.disabled = false;
+
+        const bonusSteps = Math.floor(Math.random() * (300 - 50 + 1)) + 50;
+        state.steps_today += bonusSteps;
+        state.steps_total += bonusSteps;
+        state.last_watered_date = todayKst;
+
+        const lvlInfo = calculateLevelInfo(state.steps_total);
+        const prevLevel = state.level;
+        state.level = lvlInfo.level;
+
+        localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state));
+
+        updateDashboardUI();
+        updatePlantSectionUI();
+
+        showSystemPopup("🌱 식물이 기뻐합니다!", `반려식물에 물을 주어 보너스 걸음수 [+${bonusSteps}보]를 획득했습니다! 누적 경험치에 반영되었습니다.`);
+
+        if (state.level > prevLevel) {
+          setTimeout(() => showLevelUpAlert(state.level), 500);
+        }
+
+        debouncedUpload();
+      }, 1450);
+    }
+
+    function updatePlantSectionUI() {
+      const todayKst = getKstDateString();
+      const title = document.getElementById('plant-status-title');
+      const btn = document.getElementById('btn-water-action');
+      const tag = document.getElementById('water-status-tag');
+      const plantEmoji = document.getElementById('plant-emoji');
+
+      if (state.last_watered_date === todayKst) {
+        title.innerText = "식물이 무럭무럭 자라는 중!";
+        plantEmoji.innerText = state.level >= 10 ? "🌳" : "🌿";
+        btn.innerText = "✅ 완료됨";
+        btn.className = "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 font-bold text-xs px-4 h-11 rounded-xl cursor-not-allowed whitespace-nowrap";
+        tag.innerText = "오늘 미션 완료";
+        tag.className = "text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-400";
+      } else {
+        title.innerText = "식물이 목이 말라요!";
+        plantEmoji.innerText = "🌱";
+        btn.innerText = "💧 물 주기";
+        btn.className = "bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-black text-xs px-4 h-11 rounded-xl shadow-md active:scale-95 transition-all whitespace-nowrap";
+        tag.innerText = "하루 한 번 참여 가능";
+        tag.className = "text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400";
+      }
+    }
+
+    function sendStepNotification(customTitle, customBody) {
+      const title = customTitle || "🏃 그린스텝 실시간 걸음수 알림";
+      const body = customBody || `오늘: ${state.steps_today.toLocaleString()}보 | 누적: ${state.steps_total.toLocaleString()}보 (${getLevelStageText(state.level)})`;
+      showSystemPopup(title, body);
+    }
+
+    function showSystemPopup(title, content) {
+      document.getElementById('popup-title').innerText = title;
+      document.getElementById('popup-content').innerText = content;
+      const modal = document.getElementById('system-popup-modal');
+      const card = document.getElementById('system-popup-card');
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      setTimeout(() => { modal.classList.remove('opacity-0'); card.classList.remove('scale-95'); }, 10);
+    }
+
+    function closeSystemPopup() {
+      const modal = document.getElementById('system-popup-modal');
+      const card = document.getElementById('system-popup-card');
+      modal.classList.add('opacity-0'); card.classList.add('scale-95');
+      setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); }, 300);
+    }
+
+    function showLevelUpAlert(newLevel) {
+      const modal = document.getElementById('levelup-modal');
+      const card = document.getElementById('levelup-card');
+      document.getElementById('levelup-level-value').innerText = newLevel;
+      if (typeof getLevelStageText === 'function') {
+        const fullText = getLevelStageText(newLevel);
+        const processedName = fullText.replace(/LV\.\d+\s*/, '');
+        document.getElementById('levelup-level-name').innerText = `(${processedName})`;
+      }
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      setTimeout(() => { modal.classList.remove('opacity-0'); card.classList.remove('scale-95'); }, 10);
+    }
+
+    function closeLevelUpModal() {
+      const modal = document.getElementById('levelup-modal');
+      const card = document.getElementById('levelup-card');
+      modal.classList.add('opacity-0'); card.classList.add('scale-95');
+      setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); }, 300);
+    }
+
+    function connectNotificationStream() {
+      if (!navigator.onLine || isStreamConnected) return;
+      try {
+        evtSource = new EventSource(`${SERVER_URL}/api/notifications/stream`);
+        evtSource.onmessage = function (event) {
+          const data = JSON.parse(event.data);
+          if (data.type === 'NOTIFICATION') sendStepNotification(`[알림] ${data.title}`, `${data.content}`);
+        };
+        isStreamConnected = true;
+      } catch (e) { console.error("스트림 연결 실패", e); }
+    }
+
+    function getKstDateString() {
+      const kstOffset = 9 * 60 * 60 * 1000;
+      return new Date(Date.now() + kstOffset).toISOString().slice(0, 10).replace(/-/g, "");
+    }
+    function isWeekend() { const day = new Date().getDay(); return day === 0 || day === 6; }
+
+    window.addEventListener('online', async () => {
+      const statusBadge = document.getElementById('online-status-badge');
+      statusBadge.innerText = "● 온라인";
+      statusBadge.className = "px-2.5 h-7 flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 text-[11px] font-bold shadow-xs whitespace-nowrap";
+      if (state.pending_sync) await uploadStepsToServer();
+      await syncWithServer(); await syncAllData(); connectNotificationStream();
+    });
+
+    window.addEventListener('offline', () => {
+      const statusBadge = document.getElementById('online-status-badge');
+      statusBadge.innerText = "○ 오프라인 (임시저장)";
+      statusBadge.className = "px-2.5 h-7 flex items-center justify-center rounded-xl bg-amber-50 text-amber-600 border border-amber-200 text-[11px] font-bold shadow-xs whitespace-nowrap";
+      if (evtSource) { evtSource.close(); isStreamConnected = false; }
+    });
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      loadLocalStorage();
+      changeAppTheme(state.app_theme || 'light');
+
+      if (state.schul_code && state.username) {
+        if (navigator.onLine) {
+          await syncWithServer(); await syncAllData(); connectNotificationStream(); await checkUnreadNotifications();
+        } else {
+          updateLocalUIOnly();
+        }
+      } else {
+        openProfileModal();
+      }
+
+      // ⏱️ 지오펜싱 및 날씨 로딩 검사 주기를 8초 -> 3초로 대폭 단축하여 극적인 실시간성 확보
+      setInterval(checkGeofencingAndFetchWeather, 3000);
+      checkGeofencingAndFetchWeather();
+      setInterval(() => { if (state.schul_code && navigator.onLine) loadCheersBoard(); }, 5000);
+    });
+
+    function loadLocalStorage() {
+      const saved = localStorage.getItem('GREEN_STEP_USER_PROFILE');
+      if (saved) { state = { ...state, ...JSON.parse(saved) }; }
+
+      const todayKstKey = getKstDateString();
+      const lastSyncDate = localStorage.getItem('gs_last_sync_date');
+      if (lastSyncDate !== todayKstKey) {
+        state.steps_today = 0; state.is_commuted = false; state.pending_sync = false;
+        localStorage.setItem('gs_last_sync_date', todayKstKey);
+        if (saved) localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state));
+      }
+    }
+
+    function updateLocalUIOnly() {
+      document.getElementById('display-school').innerText = state.school_name;
+      document.getElementById('display-user-info').innerText = `${state.username} (${state.grade}학년 ${state.class_num}반)`;
+      updateDashboardUI();
+      updatePlantSectionUI();
+
+      const badge = document.getElementById('commute-badge');
+      if (state.is_commuted) {
+        badge.innerText = "등교 완료"; badge.className = "font-bold bg-emerald-500 text-white px-2.5 py-0.5 rounded-lg text-xs";
+      }
+      document.getElementById('meal-container').innerHTML = `<p class="text-slate-400 text-xs py-4">오프라인 모드: 인터넷 연결 시 식단이 보입니다.</p>`;
+      document.getElementById('cheers-container').innerHTML = `<p class="text-slate-400 text-xs text-center py-6">오프라인 모드</p>`;
+      document.getElementById('ranking-list').innerHTML = `<p class="text-slate-400 text-xs text-center py-6">오프라인 모드</p>`;
+    }
+
+    async function syncWithServer() {
+      if (!state.device_id || !navigator.onLine) return;
+      try {
+        const res = await fetch(`${SERVER_URL}/api/user/${encodeURIComponent(state.device_id)}`);
+        const data = await res.json();
+        if (data.success && data.user) {
+          const u = data.user;
+          state.username = u.username || state.username;
+          state.grade = u.grade !== undefined ? String(u.grade) : state.grade;
+          state.class_num = u.class_num !== undefined ? String(u.class_num) : state.class_num;
+          if (u.steps_today > state.steps_today) { state.steps_today = u.steps_today || 0; state.steps_total = u.steps_total || 0; }
+          state.is_commuted = u.is_commuted || false;
+          state.level = calculateLevelInfo(state.steps_total).level;
+          localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state));
+          document.getElementById('display-user-info').innerText = `${state.username} (${state.grade}학년 ${state.class_num}반)`;
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function checkUnreadNotifications() {
+      if (!state.device_id || !navigator.onLine) return;
+      try {
+        const res = await fetch(`${SERVER_URL}/api/notifications/unread/${encodeURIComponent(state.device_id)}`);
+        const data = await res.json();
+        if (data.success && data.list && data.list.length > 0) {
+          for (const noti of data.list) {
+            sendStepNotification(`[알림] ${noti.title}`, noti.content);
+            await fetch(`${SERVER_URL}/api/notifications/read`, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ device_id: state.device_id, noti_id: noti.id })
+            });
+          }
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function updateStepsFromFlutter(steps) {
+      const parsedSteps = parseInt(steps, 10) || 0;
+      if (parsedSteps < state.steps_today) return;
+      const diff = parsedSteps - state.steps_today;
+      state.steps_today = parsedSteps; state.steps_total += diff;
+
+      const lvlInfo = calculateLevelInfo(state.steps_total);
+      const prevLevel = state.level; state.level = lvlInfo.level;
+
+      localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state));
+      updateDashboardUI();
+
+      if (state.level > prevLevel) {
+        sendStepNotification("🎉 LEVEL UP 달성!", `축하합니다! 누적 걸음수가 쌓여 [LV.${state.level}] 등급으로 성장했습니다! 🌱`);
+      }
+      debouncedUpload();
+    }
+    window.updateStepsFromFlutter = updateStepsFromFlutter;
+
+    function updateDashboardUI() {
+      const lvlInfo = calculateLevelInfo(state.steps_total);
+      document.getElementById('step-counter').innerText = state.steps_today.toLocaleString();
+      document.getElementById('display-total-steps').innerText = `총 누적: ${state.steps_total.toLocaleString()}보`;
+      document.getElementById('step-progress').style.width = `${lvlInfo.progressPercent}%`;
+      document.getElementById('display-level').innerText = getLevelStageText(lvlInfo.level);
+      document.getElementById('level-target-text').innerText = `다음 레벨업까지 +${(lvlInfo.requiredForNext - lvlInfo.currentLevelSteps).toLocaleString()}보 남음`;
+      const pendingTag = document.getElementById('sync-pending-tag');
+      if (state.pending_sync) pendingTag.classList.remove('hidden'); else pendingTag.classList.add('hidden');
+    }
+
+    let uploadTimeout = null;
+    function debouncedUpload() {
+      clearTimeout(uploadTimeout);
+      uploadTimeout = setTimeout(async () => {
+        if (state.device_id) { await uploadStepsToServer(); if (navigator.onLine) await loadRanking(); }
+      }, 1000);
+    }
+
+    async function uploadStepsToServer() {
+      if (!state.device_id || !state.schul_code) return;
+      if (!navigator.onLine) { state.pending_sync = true; localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state)); updateDashboardUI(); return; }
+      try {
+        const res = await fetch(`${SERVER_URL}/api/steps`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            device_id: state.device_id, username: state.username, school: state.school_name,
+            schul_code: state.schul_code, atpt_code: state.atpt_code, school_kind: state.school_kind,
+            school_lat: state.school_lat, school_lng: state.school_lng,
+            grade: parseInt(state.grade) || 1, class_num: parseInt(state.class_num) || 1,
+            steps_today: state.steps_today, steps_total: state.steps_total, is_commuted: state.is_commuted, sync_date: getKstDateString()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (data.levelUp === true) showLevelUpAlert(data.currentLevel);
+          if (data.currentLevel !== undefined) state.level = data.currentLevel;
+          state.pending_sync = false; localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state)); updateDashboardUI();
+        }
+      } catch (e) { state.pending_sync = true; localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state)); updateDashboardUI(); }
+    }
+
+    async function syncAllData() {
+      if (!state.schul_code) return;
+      document.getElementById('display-school').innerText = state.school_name;
+      document.getElementById('display-user-info').innerText = `${state.username} (${state.grade}학년 ${state.class_num}반)`;
+      updateDashboardUI();
+      updatePlantSectionUI();
+
+      const badge = document.getElementById('commute-badge');
+      if (isWeekend()) {
+        badge.innerText = "주말 (인증 없음)"; badge.className = "font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 px-2.5 py-0.5 rounded-lg text-xs";
+      } else if (state.is_commuted) {
+        badge.innerText = "등교 완료"; badge.className = "font-bold bg-emerald-500 text-white px-2.5 py-0.5 rounded-lg text-xs";
+      } else {
+        badge.innerText = "등교 미인증"; badge.className = "font-bold bg-amber-400 text-slate-900 px-2.5 py-0.5 rounded-lg text-xs";
+      }
+      if (navigator.onLine) await Promise.all([loadMeal(), loadRanking(), loadCheersBoard()]);
+    }
+
+    async function loadMeal() {
+      const container = document.getElementById('meal-container'); const calBadge = document.getElementById('meal-calories');
+      if (!state.schul_code || !navigator.onLine) return;
+      try {
+        const res = await fetch(`${SERVER_URL}/api/neis/meal?atpt_code=${state.atpt_code}&schul_code=${state.schul_code}&date=${getKstDateString()}`);
+        const data = await res.json();
+        calBadge.innerHTML = `<span class="bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full font-bold">${data.calories || '0 kcal'}</span>`;
+        container.innerHTML = '';
+        if (!data.dishList || data.dishList.length === 0) { container.innerHTML = `<p class="text-slate-400 text-xs py-4">오늘의 급식 식단이 없습니다.</p>`; return; }
+        data.dishList.forEach((dish, idx) => {
+          const row = document.createElement('div');
+          row.className = "flex items-center space-x-3 py-2 border-b border-slate-100 dark:border-slate-800 last:border-0 text-xs font-semibold text-slate-700 dark:text-slate-300";
+          row.innerHTML = `<span class="w-5 h-5 flex items-center justify-center bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-black">${idx + 1}</span><span>${dish.replace(/[0-9.]/g, '').replace(/\(\)/g, '').trim()}</span>`;
+          container.appendChild(row);
+        });
+      } catch (e) { container.innerHTML = `<p class="text-rose-400 text-xs py-4">식단조회 실패</p>`; }
+    }
+
+    async function loadCheersBoard() {
+      const container = document.getElementById('cheers-container');
+      if (!state.schul_code || !navigator.onLine) return;
+      try {
+        const res = await fetch(`${SERVER_URL}/api/cheers?schul_code=${state.schul_code}`);
+        const data = await res.json(); container.innerHTML = '';
+        if (!data.list || data.list.length === 0) { container.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">방명록이 비어있습니다.</p>`; return; }
+        data.list.forEach(msg => {
+          const row = document.createElement('div'); const isMe = msg.username === state.username;
+          const isAdmin = msg.is_admin === 1 || ['운영자', '관리자', '선생님'].some(kw => msg.username.includes(kw));
+          row.className = `p-2.5 rounded-xl text-xs border transition-all ${isAdmin ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300' : isMe ? 'bg-emerald-50/40 border-emerald-200 dark:border-emerald-900' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`;
+          row.innerHTML = `
+            <div class="flex justify-between items-center mb-1">
+              <div class="flex items-center space-x-1.5">
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400">${msg.grade ? `${msg.grade}학년 ${msg.class_num}반` : '본부'}</span>
+                <span class="font-bold ${isMe ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}">${msg.username}</span>
+              </div>
+              <span class="text-[9px] text-slate-400">${msg.createdAt.substring(11, 16)}</span>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300 break-all mt-1">${msg.content}</p>
+          `;
+          container.appendChild(row);
+        });
+      } catch (e) { }
+    }
+
+    async function submitCheerMessage() {
+      const input = document.getElementById('input-cheer-content'); const content = input.value.trim();
+      if (!state.schul_code || !state.username) return alert('프로필을 먼저 등록해 주세요.');
+      if (!content) return;
+      try {
+        const res = await fetch(`${SERVER_URL}/api/cheers`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ schul_code: state.schul_code, grade: parseInt(state.grade), class_num: parseInt(state.class_num), username: state.username, content: content })
+        });
+        if ((await res.json()).success) { input.value = ''; await loadCheersBoard(); }
+      } catch (e) { }
+    }
+
+    function selectFeedbackTopic(topic, color, typeCode = 'BUG') {
+      selectedFeedbackTopic = topic; selectedFeedbackType = typeCode;
+      for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`btn-topic-${i}`);
+        if (btn.innerText.includes(topic.substring(2))) {
+          btn.className = `py-2.5 px-3 rounded-xl text-xs font-bold border transition-all text-left bg-${color}-50 dark:bg-slate-800 text-${color}-700 dark:text-${color}-400 border-${color}-300 dark:border-${color - 900} shadow-xs`;
+        } else {
+          btn.className = `py-2.5 px-3 rounded-xl text-xs font-bold border transition-all text-left bg-slate-50 dark:bg-slate-800/40 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 opacity-60`;
+        }
+      }
+    }
+
+    async function submitFeedback() {
+      const contentInput = document.getElementById('input-feedback-content'); const content = contentInput.value.trim();
+      if (!content || !state.username) return alert('제보 내용을 입력하세요.');
+      try {
+        const res = await fetch(`${SERVER_URL}/api/feedback`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: state.username, school: state.school_name, schul_code: state.schul_code, grade: state.grade, class_num: state.class_num, type: selectedFeedbackType, title: selectedFeedbackTopic, content: content })
+        });
+        if ((await res.json()).success) { alert(`접수되었습니다!`); contentInput.value = ''; }
+      } catch (e) { }
+    }
+
+    async function loadRanking() {
+      if (!state.schul_code || !navigator.onLine) return;
+      try {
+        const myRankRes = await fetch(`${SERVER_URL}/api/my-rank/${state.schul_code}/${encodeURIComponent(state.device_id)}`);
+        const myRankData = await myRankRes.json();
+        document.getElementById('my-rank-badge').innerText = (myRankData && myRankData.rank !== null) ? `내 순위: ${myRankData.rank}위` : "분석 대기";
+
+        cachedRankData.school = await (await fetch(`${SERVER_URL}/api/ranking/school/${state.schul_code}`)).json() || [];
+        cachedRankData.grade = await (await fetch(`${SERVER_URL}/api/ranking/grade/${state.schul_code}/${state.grade}`)).json() || [];
+        cachedRankData.class = await (await fetch(`${SERVER_URL}/api/ranking/class/${state.schul_code}/${state.grade}/${state.class_num}`)).json() || [];
+        renderRankingDOM();
+      } catch (e) { }
+    }
+
+    function renderRankingDOM() {
+      const container = document.getElementById('ranking-list'); const data = cachedRankData[currentRankTab] || [];
+      container.innerHTML = '';
+      if (data.length === 0) { container.innerHTML = '<div class="text-slate-400 text-xs text-center py-6">데이터가 비어있습니다.</div>'; return; }
+      data.forEach((user, idx) => {
+        const item = document.createElement('div'); const isMe = user.device_id === state.device_id;
+        item.className = `flex justify-between items-center p-3.5 rounded-xl border transition-all ${isMe ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 shadow-xs' : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800'}`;
+        let rM = `${idx + 1}위`; if (idx === 0) rM = "🥇 1등"; if (idx === 1) rM = "🥈 2등"; if (idx === 2) rM = "🥉 3등";
+        item.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <span class="w-10 text-center font-black text-xs text-slate-500">${rM}</span>
+            <div>
+              <p class="text-xs font-bold text-slate-800 dark:text-white">${user.username} ${isMe ? '<span class="text-[9px] bg-emerald-500 text-white px-1.5 py-0.5 rounded ml-1 font-black">나</span>' : ''}</p>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">${user.grade}학년 ${user.class_num}반 (${getLevelStageText(user.level)})</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-xs font-black text-slate-900 dark:text-white">${parseInt(user.steps_today || 0).toLocaleString()}보</p>
+            <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">총 ${parseInt(user.steps_total || 0).toLocaleString()}보</p>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function switchRankTab(tab) {
+      ['school', 'grade', 'class'].forEach(t => document.getElementById(`rank-tab-${t}`).className = "flex-1 py-2 text-center rounded-lg");
+      document.getElementById(`rank-tab-${tab}`).className = "flex-1 py-2 text-center rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-bold";
+      currentRankTab = tab; renderRankingDOM();
+    }
+
+    // 🚀 [핵심 고도화] 위치 측정 정밀도 업그레이드 및 실시간 날씨 데이터 가시성 확보 함수
+    function checkGeofencingAndFetchWeather() {
+      if (!navigator.geolocation) return;
+
+      // 고정밀 모드(enableHighAccuracy: true) 활성화 및 캐시 무효화로 새로고침 속도 가속화
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const uLat = pos.coords.latitude, uLng = pos.coords.longitude;
+
+        if (navigator.onLine) {
+          try {
+            const wData = await (await fetch(`${SERVER_URL}/api/weather?lat=${uLat}&lng=${uLng}`)).json();
+            if (wData.success) {
+              document.getElementById('weather-temp').innerText = wData.temp;
+              document.getElementById('weather-status-text').innerText = wData.status;
+              document.getElementById('weather-comment').innerText = wData.message;
+
+              // 🌧️ 비 또는 눈 강수량 데이터 매칭 후 실시간 렌더링
+              const rainVal = wData.rain !== undefined ? wData.rain : (wData.precipitation !== undefined ? wData.precipitation : '0');
+              document.getElementById('weather-rain').innerText = rainVal;
+            }
+          } catch (err) { console.error("날씨 연동 실패", err); }
+        }
+
+        if (isWeekend() || !state.schul_code || state.is_commuted) return;
+
+        // 실시간 학교 반경 지오펜싱 하버사인 계산 알고리즘
+        const R = 6371000;
+        const r1 = uLat * Math.PI / 180, r2 = state.school_lat * Math.PI / 180;
+        const df = (state.school_lat - uLat) * Math.PI / 180, dl = (state.school_lng - uLng) * Math.PI / 180;
+        const a = Math.sin(df / 2) ** 2 + Math.cos(r1) * Math.cos(r2) * Math.sin(dl / 2) ** 2;
+        const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        if (distance <= 200) {
+          state.is_commuted = true;
+          if (navigator.onLine) { syncAllData(); uploadStepsToServer(); } else { state.pending_sync = true; }
+        } else {
+          document.getElementById('geo-log').innerHTML = `학교와의 거리: 약 <strong>${Math.round(distance)}m</strong> (200m 반경 진입 시 자동 인증)`;
+        }
+      }, () => { }, {
+        enableHighAccuracy: true,  // 🛰️ 고정밀 GPS 수신기 활성화
+        timeout: 2500,             // 타임아웃 단축
+        maximumAge: 0              // 이전 위치 캐시 금지 (매번 새로 측정)
+      });
+    }
+
+    function openProfileModal() {
+      document.getElementById('input-username').value = state.username || '';
+      document.getElementById('input-school-search').value = state.school_name || '';
+      changeAppTheme(state.app_theme || 'light');
+      document.getElementById('profile-modal').classList.remove('hidden'); document.getElementById('profile-modal').classList.add('flex');
+      setTimeout(() => document.getElementById('profile-sheet').classList.remove('translate-y-full'), 50);
+    }
+    function closeProfileModal() {
+      document.getElementById('profile-sheet').classList.add('translate-y-full');
+      setTimeout(() => { document.getElementById('profile-modal').classList.remove('flex'); document.getElementById('profile-modal').classList.add('hidden'); }, 250);
+    }
+    function goToTermsStep() {
+      if (!document.getElementById('input-username').value.trim() || !state.schul_code) return alert('정보를 바르게 채워주세요.');
+      document.getElementById('profile-sheet').classList.add('translate-y-full');
+      document.getElementById('terms-modal').classList.remove('hidden'); document.getElementById('terms-modal').classList.add('flex');
+      setTimeout(() => { document.getElementById('profile-modal').classList.remove('flex'); document.getElementById('terms-sheet').classList.remove('translate-y-full'); }, 50);
+    }
+    function closeTermsModal() {
+      document.getElementById('terms-sheet').classList.add('translate-y-full');
+      document.getElementById('profile-modal').classList.remove('hidden');
+      setTimeout(() => { document.getElementById('terms-modal').classList.remove('flex'); document.getElementById('profile-sheet').classList.remove('translate-y-full'); }, 50);
+    }
+
+    async function searchSchool() {
+      const keyword = document.getElementById('input-school-search').value.trim();
+      const resultBox = document.getElementById('school-search-results');
+      if (!keyword) return; resultBox.innerHTML = '<div class="p-3 text-center text-slate-400">조회중...</div>'; resultBox.classList.remove('hidden');
+      try {
+        const data = await (await fetch(`${SERVER_URL}/api/neis/school?name=${encodeURIComponent(keyword)}`)).json(); resultBox.innerHTML = '';
+        if (!data.rows || data.rows.length === 0) { resultBox.innerHTML = `<div class="p-3 text-center text-slate-400">결과 없음</div>`; return; }
+        data.rows.forEach(item => {
+          const div = document.createElement('div'); div.className = "p-3 hover:bg-emerald-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer";
+          div.innerText = `[${item.ATPT_OFCDC_SC_NM}] ${item.SCHUL_NM}`;
+          div.onclick = () => {
+            state.school_name = item.SCHUL_NM; state.schul_code = item.SD_SCHUL_CODE; state.atpt_code = item.ATPT_OFCDC_SC_CODE; state.school_kind = item.SCHUL_KND_SC_NM || '';
+            document.getElementById('input-school-search').value = item.SCHUL_NM; resultBox.classList.add('hidden');
+            const gSel = document.getElementById('input-grade'); gSel.innerHTML = ''; const maxG = (state.school_kind || '').includes('초등') ? 6 : 3;
+            for (let i = 1; i <= maxG; i++) gSel.innerHTML += `<option value="${i}">${i}학년</option>`; loadClassList();
+          };
+          resultBox.appendChild(div);
+        });
+      } catch (e) { }
+    }
+
+    async function loadClassList() {
+      const grade = document.getElementById('input-grade').value; const classSel = document.getElementById('input-class');
+      if (!state.schul_code) return;
+      try {
+        const data = await (await fetch(`${SERVER_URL}/api/neis/classes?atpt_code=${state.atpt_code}&schul_code=${state.schul_code}&grade=${grade}&year=2026`)).json();
+        classSel.innerHTML = '';
+        if (!data.classList || data.classList.length === 0) { for (let i = 1; i <= 12; i++) classSel.innerHTML += `<option value="${i}">${i}반</option>`; return; }
+        data.classList.forEach(c => { classSel.innerHTML += `<option value="${c}">${c}반</option>`; });
+      } catch (e) { classSel.innerHTML = '<option value="1">1반</option>'; }
+    }
+
+    async function saveProfile() {
+      if (!document.getElementById('agree-terms').checked) return alert('약관에 동의해 주세요.');
+      const nameInput = document.getElementById('input-username').value.trim();
+      const targetGrade = document.getElementById('input-grade').value;
+      const targetClass = document.getElementById('input-class').value;
+
+      state.username = nameInput; state.grade = targetGrade; state.class_num = targetClass;
+      state.device_id = `USR_${state.schul_code}_${targetGrade}_${targetClass}_${encodeURIComponent(nameInput)}`;
+      localStorage.setItem('GREEN_STEP_USER_PROFILE', JSON.stringify(state));
+
+      document.getElementById('terms-sheet').classList.add('translate-y-full');
+      setTimeout(() => { document.getElementById('terms-modal').classList.remove('flex'); }, 200);
+
+      await syncWithServer(); await uploadStepsToServer(); await syncAllData(); await checkUnreadNotifications();
+    }
+  </script>
+</body>
+
+</html>

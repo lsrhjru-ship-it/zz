@@ -1,0 +1,44 @@
+{
+  "appId": "com.lsrhjru.app",
+  "appName": "GreenStep",
+  "webDir": "www",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#10b981",
+      "sound": "default"
+    },
+    "Geolocation": {
+      "permissions": [
+        "location",
+        "coarseLocation"
+      ]
+    },
+    "BackgroundTask": {
+      "enabled": true
+    }
+  },
+  "server": {
+    "androidScheme": "https",
+    "hostname": "localhost",
+    "cleartext": true,
+    "allowNavigation": [
+      "*.neis.go.kr",
+      "open.neis.go.kr",
+      "dc.wrd.kr",
+      "*.wrd.kr",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "cdnjs.cloudflare.com",
+      "cdn-icons-png.flaticon.com"
+    ]
+  },
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#f0f4f2",
+    "buildOptions": {
+      "keystorePath": null,
+      "keystoreAlias": null
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "greenstep-server",
+  "version": "1.0.0",
+  "description": "GreenStep 도보 등교 랭킹 서버",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@awesome-cordova-plugins/background-mode": "^9.2.0",
+    "@awesome-cordova-plugins/health": "^9.2.0",
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/cli": "^7.6.7",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/geolocation": "^8.2.0",
+    "@capacitor/ios": "^8.4.1",
+    "@capacitor/local-notifications": "^8.2.0",
+    "@capawesome/capacitor-background-task": "^8.0.2",
+    "better-sqlite3": "^9.4.3",
+    "capacitor-foreground-service": "^1.0.3",
+    "capacitor-persistent-notification": "^0.9.5",
+    "cordova-plugin-device": "^3.0.0",
+    "cordova-plugin-health": "^3.2.4",
+    "cordova-plugin-pedometer": "^0.4.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
